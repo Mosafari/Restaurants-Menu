@@ -19,4 +19,6 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('restaurant/', include('Menu.urls')),
+    # adding restaurant path for auth 
+    path("restaurant/", include("django.contrib.auth.urls")),
 ]
