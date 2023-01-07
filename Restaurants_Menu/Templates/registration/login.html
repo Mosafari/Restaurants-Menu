@@ -5,6 +5,7 @@
     <h3 class="title">Login</h3>
     <div class="box">
         <form method="POST" action="/login">
+		    {% csrf_token %}
             <div class="field">
                 <div class="control">
                     <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
@@ -16,12 +17,7 @@
                     <input class="input is-large" type="password" name="password" placeholder="Your Password">
                 </div>
             </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox" name="remember">
-                    Remember me
-                </label>
-            </div>
+
             <button class="button is-block is-info is-large is-fullwidth">Login</button>
         </form>
     </div>
