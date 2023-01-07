@@ -5,6 +5,7 @@
     <h3 class="title">Login</h3>
     <div class="box">
         <form method="POST" action="/login">
+            {% CSRF token %}
             <div class="field">
                 <div class="control">
                     <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
