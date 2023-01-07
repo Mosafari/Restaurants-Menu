@@ -3,55 +3,16 @@
 {% block content %}
 <div class="column is-4 is-offset-4">
     <h3 class="title">Sign Up</h3>
+    
+    {% block message %}
+        {% if message %}<div >{{ message }}</div>{% endif %}
+    {% endblock %}
+
     <div class="box">
 
         <form method="POST" action="/restaurant/signup/">
             {% csrf_token %}
-            {% comment %} <tr>
-                <th><label for="id_email">Email:</label></th>
-                <td>
-                  <input type="email" name="email" value="ex@mple.com" maxlength="254" autofocus required id="id_email">
-                </td>
-              </tr>
-            <br>
             
-              <tr>
-                <th><label for="id_restaurant">Restaurant:</label></th>
-                <td>
-                  <textarea name="restaurant" cols="20" rows="1" maxlength="50" required id="id_restaurant"></textarea>
-                </td>
-              </tr>
-              <br>
-            
-              <tr>
-                <th><label for="id_password1">Password:</label></th>
-                <td>
-                  <ul class="errorlist"><li>This field is required.</li></ul>
-                  <input type="password" name="password1" autocomplete="new-password" required id="id_password1">
-                    <br>
-                    <span class="helptext"><ul><li>Your password can't be too similar to your other personal information.</li>
-                        <li>Your password must contain at least 8 characters.</li>
-                        <li>Your password can't be a commonly used password.</li>
-                        <li>Your password can't be entirely numeric.</li>
-                    </span>
-                  </ul>
-                </td>
-              </tr>
-            
-              <tr>
-                <th><label for="id_password2">Password confirmation:</label></th>
-                <td>
-                  <ul class="errorlist"><li>This field is required.</li></ul>
-                  <input type="password" name="password2" autocomplete="new-password" required id="id_password2">
-            
-                    <br>
-                    <span class="helptext">Enter the same password as before, for verification.</span>
-            
-            
-            
-            
-                </td>
-              </tr> {% endcomment %}
             <div class="field">
                 <div class="control">
                     <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">

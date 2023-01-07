@@ -9,9 +9,8 @@ from .models import User
 # Create your views here.
 from .forms import CustomUserCreationForm
 class SignUpView(View):
-    def get(self, request, *args, **kwargs):
-        form = CustomUserCreationForm()     
-        return HttpResponse(render(request, 'signup.html',{'form':form}), 200)
+    def get(self, request, *args, **kwargs): 
+        return HttpResponse(render(request, 'signup.html'), 200)
     
     # importing new form
     def post(self, request, *args, **kwargs):
@@ -19,11 +18,13 @@ class SignUpView(View):
         restaurant = request.POST.get('restaurant')
         password = request.POST.get('password')
         print(password,email,restaurant)
-        model = User(email=email, password=password, restaurant=restaurant)
-        model.save()
-        return HttpResponse(render(request, 'hello.html'), 200)
-        # form = CustomUserCreationForm(request.POST)
-        # # check whether it's valid:
-        # if form.is_valid():
-        #     print(form.cleaned_data)
-        #     return HttpResponse(render(request, 'hello.html'), 200)
+        # see if restaurant already exists
+        if User.objects.filter(restaurant=restaurant):
+            return HttpResponse(render(request, 'signup.html',{'message':'Restaurant\'s Name already exists'}))
+        # see if email already exist
+        elif User.objects.filter(email=email).exists():
+            return HttpResponse(render(request, 'signup.html',{'message':'Email already exists'}))
+        else:
+            model = User(email=email, password=password, restaurant=restaurant)
+            model.save()
+            return HttpResponse(render(request, 'hello.html'), 200)
