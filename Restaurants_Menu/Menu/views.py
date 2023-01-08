@@ -5,6 +5,8 @@ from django.views import View
 
 from .models import User
 
+# Authentication
+from django.contrib.auth import authenticate
 
 # Create your views here.
 from .forms import CustomUserCreationForm
@@ -33,3 +35,14 @@ class SignUpView(View):
 class LogInView(View):
     def get(self, request, *args, **kwargs):
         return render(request, 'login.html',status=200)
+
+    def post(self, request, *args, **kwargs):
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+        print(CustomUserCreationForm())
+        user = authenticate(username=email, password=password)
+        if user is None:
+            print('Invalid Username or Password')
+        else:
+            print("Pass")
+        
