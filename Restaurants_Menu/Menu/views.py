@@ -1,9 +1,12 @@
-from django.shortcuts import render,HttpResponse,HttpResponseRedirect
+from django.shortcuts import render, HttpResponse,HttpResponseRedirect
 
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse 
 from django.views import View
 
 from django.contrib.auth.models import update_last_login
+from django.contrib.auth import login
+
+from django.contrib.auth.decorators import login_required
 
 from .models import User
 
@@ -41,9 +44,11 @@ class SignUpView(View):
             f = CustomUserCreationForm()
             return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
         if form.is_valid():
-            u = form.save(commit=False)
-            u.save()
-            return render(request, 'hello.html',status=200)
+            user = form.save(commit=False)
+            user.save()
+            login(request,user)
+            update_last_login(None, user)
+            return HttpResponseRedirect(reverse('main'))
         else:
             return render(request, 'signup.html',{'messages': ["Somthings went wrong :("], "form": f})
         
@@ -58,8 +63,15 @@ class LogInView(View):
         if user is None:
             return render(request, 'login.html',{'messages':['Invalid Username or Password']})
         else:
-
+            login(request,user)
             update_last_login(None, user)
             print(request.user)
-            return render(request, 'hello.html',status=200)
+            return HttpResponseRedirect(reverse('main'))
+        
+        
+@login_required(login_url="/restaurant/login/",) 
+def main(request):
+    if request.method == "GET":
+        return render(request, 'hello.html',status=200)
+    
         
