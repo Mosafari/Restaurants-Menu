@@ -3,6 +3,8 @@ from django.shortcuts import render,HttpResponse,HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
 
+from django.contrib.auth.models import update_last_login
+
 from .models import User
 
 # Authentication
@@ -11,26 +13,39 @@ from django.contrib.auth import authenticate
 # Create your views here.
 from .forms import CustomUserCreationForm
 class SignUpView(View):
-    def get(self, request, *args, **kwargs): 
-        return render(request, 'signup.html',status=200)
+    def get(self, request, *args, **kwargs):
+        form = CustomUserCreationForm() 
+        return render(request, 'signup.html',{'message':'Password must contain at least 8 characters.(Number\'s and Letter\'s\')', "form":form},status=200)
     
     # importing new form
     def post(self, request, *args, **kwargs):
+        messages =[]
         email = request.POST.get('email')
         restaurant = request.POST.get('restaurant')
-        password = request.POST.get('password')
+        password = request.POST.get('password1')
         print(password,email,restaurant)
+        form = CustomUserCreationForm(request.POST)
+        print(form.is_valid(),form.cleaned_data)
+        if form.errors.as_text():
+            errors = form.errors.as_text().splitlines()[1:]
+            print(errors)
+        else: errors = ''
         # see if restaurant already exists
         if User.objects.filter(restaurant=restaurant):
-            return render(request, 'signup.html',{'message':'Restaurant\'s Name already exists'})
+            messages.append('Restaurant\'s Name already exists')
         # see if email already exist
-        elif User.objects.filter(email=email).exists():
-            return render(request, 'signup.html',{'message':'Email already exists'})
-        else:
-            model = User(email=email, password=password, restaurant=restaurant)
-            model.save()
+        if User.objects.filter(email=email).exists():
+            messages.append('Email already exists')
+        # if error or message is not None return to signup
+        if messages or errors :
+            f = CustomUserCreationForm()
+            return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
+        if form.is_valid():
+            u = form.save(commit=False)
+            u.save()
             return render(request, 'hello.html',status=200)
-        
+        else:
+            return render(request, 'signup.html',{'messages': ["Somthings went wrong :("], "form": f})
         
 class LogInView(View):
     def get(self, request, *args, **kwargs):
@@ -39,10 +54,12 @@ class LogInView(View):
     def post(self, request, *args, **kwargs):
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print(CustomUserCreationForm())
         user = authenticate(username=email, password=password)
         if user is None:
-            print('Invalid Username or Password')
+            return render(request, 'login.html',{'messages':['Invalid Username or Password']})
         else:
-            print("Pass")
+
+            update_last_login(None, user)
+            print(request.user)
+            return render(request, 'hello.html',status=200)
         

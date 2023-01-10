@@ -4,26 +4,31 @@
 <div class="column is-4 is-offset-4">
     <h3 class="title">Sign Up</h3>
     
-    {% block message %}
-        {% if message %}<div >{{ message }}</div>{% endif %}
+    {% block messages %}
+        {% if messages %}
+            {% for message in messages %}
+                <div >{{ message }}</div>
+            {% endfor %}
+        {% endif %}
     {% endblock %}
 
     <div class="box">
 
         <form method="POST" action="/restaurant/signup/">
             {% csrf_token %}
-            
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="">
+                    {% for field in form %}
+                        {{ field }}
+                    {% endfor %}
+                </div>
+            </div>
+            {% comment %} <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="" >
                 </div>
             </div>
 
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="restaurant" placeholder="Restaurant's Name" autofocus="">
-                </div>
-            </div>
 
             <div class="field">
                 <div class="control">
@@ -33,12 +38,27 @@
 
             <div class="field">
                 <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Password">
+                    <input class="input is-large" type="password" name="password1" placeholder="Password">
                 </div>
             </div>
 
+            <div class="field">
+                <div class="control">
+                    <input class="input is-large" type="password" name="password2" placeholder="Confirm Password">
+                </div>
+            </div> {% endcomment %}
+
             <button class="button is-block is-info is-large is-fullwidth">Sign Up</button> 
         </form>
+
+        {% block errors %}
+            {% if errors %}
+                {% for error in errors %}
+                    <div >{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
+
     </div>
 </div>
 {% endblock %}

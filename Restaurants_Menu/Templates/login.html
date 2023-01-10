@@ -3,6 +3,15 @@
 {% block content %}
 <div class="column is-4 is-offset-4">
     <h3 class="title">Login</h3>
+
+    {% block messages %}
+        {% if messages %}
+            {% for message in messages %}
+                <div >{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+    
     <div class="box">
         <form method="POST" action="/restaurant/login/">
             {% csrf_token %}
@@ -25,6 +34,15 @@
             </div>
             <button class="button is-block is-info is-large is-fullwidth">Login</button>
         </form>
+
+        {% block errors %}
+            {% if errors %}
+                {% for error in errors %}
+                    <div >{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endblock %}
+
     </div>
 </div>
 {% endblock %}
