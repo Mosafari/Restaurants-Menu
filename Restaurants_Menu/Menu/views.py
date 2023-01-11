@@ -88,3 +88,9 @@ def profile(request):
     u= User.objects.filter(email=email)
     Rname = u[0].restaurant
     return render(request, 'profile.html', {'current_user': email, 'Rname': Rname}, status=200)
+
+@login_required(login_url="/restaurant/login/",) 
+def home(request):
+    user = User.objects.filter(email=request.user)
+    name = user[0].restaurant
+    return render(request, 'home.html', {'current_user': request.user, 'name': name}, status=200)
