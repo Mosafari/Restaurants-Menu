@@ -59,6 +59,13 @@
             {% endif %}
         {% endblock %}
 
+        <br>
+        {% if not current_user.is_authenticated %}
+            <a href="{% url 'login' %}" > already have an account? 
+                Login
+            </a>
+        {% endif %}
+
     </div>
 </div>
 {% endblock %}

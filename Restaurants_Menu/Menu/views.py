@@ -65,13 +65,14 @@ class LogInView(View):
         else:
             login(request,user)
             update_last_login(None, user)
-            print(request.user)
+            print(request.user,user.is_authenticated)
             return HttpResponseRedirect(reverse('main'))
         
         
 @login_required(login_url="/restaurant/login/",) 
 def main(request):
-    if request.method == "GET":
-        return render(request, 'hello.html',status=200)
+    if request.method == "GET": 
+        user = request.user
+        return render(request, 'main.html',{'current_user': user},status=200)
     
         
