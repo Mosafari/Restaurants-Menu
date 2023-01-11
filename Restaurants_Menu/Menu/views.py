@@ -7,6 +7,8 @@ from django.contrib.auth.models import update_last_login
 from django.contrib.auth import login
 
 from django.contrib.auth.decorators import login_required
+# logout user
+from django.contrib.auth import logout
 
 from .models import User
 
@@ -75,4 +77,7 @@ def main(request):
         user = request.user
         return render(request, 'main.html',{'current_user': user},status=200)
     
-        
+@login_required(login_url="/restaurant/login/",) 
+def Logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('login'))
