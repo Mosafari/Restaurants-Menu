@@ -81,3 +81,10 @@ def main(request):
 def Logout(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
+
+@login_required(login_url="/restaurant/login/",) 
+def profile(request):
+    email = request.user
+    u= User.objects.filter(email=email)
+    Rname = u[0].restaurant
+    return render(request, 'profile.html', {'current_user': email, 'Rname': Rname}, status=200)

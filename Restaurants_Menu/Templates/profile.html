@@ -1,5 +1,17 @@
-{% extends "base.html" %}
+{% extends "main.html" %}
 
 {% block content %}
   <div class="box">
+    <div class="field">
+
+          <strong>Profile</strong>
+            <br>
+          <label>Email : </label>
+          <strong>{{ current_user }}</strong>
+            <br>
+          <label>Restaurant's Name : </label>
+          <strong>{{ Rname }}</strong>
+
+    </div>
+</div>
 {% endblock %}

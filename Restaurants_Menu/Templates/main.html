@@ -21,7 +21,7 @@
                                 Home
                             </a>
                             {% if current_user.is_authenticated %}
-                            <a href="" class="navbar-item">
+                            <a href="{% url 'profile' %}" class="navbar-item">
                                 Profile
                             </a>
                             {% endif %}
