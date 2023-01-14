@@ -10,13 +10,13 @@ from django.contrib.auth.decorators import login_required
 # logout user
 from django.contrib.auth import logout
 
-from .models import User
+from .models import User, Menu
 
 # Authentication
 from django.contrib.auth import authenticate
 
 # Create your views here.
-from .forms import CustomUserCreationForm
+from .forms import CustomUserCreationForm, MenuForm
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
         form = CustomUserCreationForm() 
@@ -94,3 +94,22 @@ def home(request):
     user = User.objects.filter(email=request.user)
     name = user[0].restaurant
     return render(request, 'home.html', {'current_user': request.user, 'name': name}, status=200)
+
+@login_required(login_url="/restaurant/login/",) 
+def EditMenu(request):
+    if request.method == "GET":
+        return render(request, 'edit.html', {'current_user': request.user, "form": MenuForm(None, None)})
+    if request.method == "POST":
+        form = MenuForm(request.POST)
+        print(form.errors.as_text().splitlines()[1:])
+        
+        if form.is_valid():
+            data = form.data
+            menuobj = Menu.objects.create(name = data["name"], price = float(data["price"]), categories = data["categories"], details = data["details"], restaurant = request.user)
+            menuobj.save()
+            return HttpResponseRedirect(reverse('home'))
+        else:
+            return HttpResponseRedirect(reverse('add'))
+            
+        
+        

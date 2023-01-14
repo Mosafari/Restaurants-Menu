@@ -56,3 +56,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+
+class Menu(models.Model):
+    name = models.CharField(max_length=255)
+    price = models.FloatField()
+    categories = models.CharField(max_length=255)
+    details = models.CharField(max_length=255)
+    restaurant = models.ForeignKey(User, on_delete=models.CASCADE)
+    

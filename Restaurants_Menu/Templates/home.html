@@ -5,6 +5,11 @@
     <div class="field">
 
           <strong>{{ name }}'s Menu</strong>
+          {% if  current_user.is_authenticated %}
+            <a href="{% url 'add' %}" >
+                Add to menu
+            </a>
+        {% endif %}
 
     </div>
 </div>

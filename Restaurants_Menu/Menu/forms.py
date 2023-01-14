@@ -1,8 +1,9 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
-from .models import User
+from .models import User, Menu
+from django import forms
 
-from django.forms import TextInput, EmailInput , CharField, PasswordInput
+from django.forms import TextInput, EmailInput , CharField, PasswordInput, NumberInput
 from django.utils.translation import gettext_lazy as _
 class CustomUserCreationForm(UserCreationForm):
     password1 = CharField(
@@ -35,7 +36,7 @@ class CustomUserCreationForm(UserCreationForm):
             'restaurant': TextInput(attrs={
                 'class': "input is-large",
                 'autofocus': '',
-                'placeholder': 'Restaurant\' Name'
+                'placeholder': 'Restaurant\'s Name'
                 }),
             
         }
@@ -79,9 +80,37 @@ class CustomUserChangeForm(UserChangeForm):
             'restaurant': TextInput(attrs={
                 'class': "input is-large",
                 'autofocus': '',
-                'placeholder': 'Restaurant\' Name'
+                'placeholder': 'Restaurant\'s Name'
                 }),
             
 
         }
         
+        
+        
+class MenuForm(forms.ModelForm):
+    class Meta:
+        model = Menu
+        fields = ("name", "price", "categories", "details", )
+        widgets = {
+        'name': TextInput(attrs={
+                'class': "input is-large",
+                'autofocus': '',
+                'placeholder': 'Food\'s Name'
+                }),
+        'price': NumberInput(attrs={
+                'class': "input is-large",
+                'autofocus': '',
+                'placeholder': 'Price'
+                }),
+        'categories': TextInput(attrs={
+                'class': "input is-large",
+                'autofocus': '',
+                'placeholder': 'Categories'
+                }),
+        'details': TextInput(attrs={
+                'class': "input is-large",
+                'autofocus': '',
+                'placeholder': 'Details'
+                }),
+        }
