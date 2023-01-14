@@ -89,20 +89,20 @@ def profile(request):
     Rname = u[0].restaurant
     return render(request, 'profile.html', {'current_user': email, 'Rname': Rname}, status=200)
 
+# add records to home page
 @login_required(login_url="/restaurant/login/",) 
 def home(request):
     user = User.objects.filter(email=request.user)
     name = user[0].restaurant
-    return render(request, 'home.html', {'current_user': request.user, 'name': name}, status=200)
+    results = Menu.objects.all()
+    return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
 
 @login_required(login_url="/restaurant/login/",) 
-def EditMenu(request):
+def AddToMenu(request):
     if request.method == "GET":
         return render(request, 'edit.html', {'current_user': request.user, "form": MenuForm(None, None)})
     if request.method == "POST":
         form = MenuForm(request.POST)
-        print(form.errors.as_text().splitlines()[1:])
-        
         if form.is_valid():
             data = form.data
             menuobj = Menu.objects.create(name = data["name"], price = float(data["price"]), categories = data["categories"], details = data["details"], restaurant = request.user)
