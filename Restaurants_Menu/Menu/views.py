@@ -131,9 +131,10 @@ def edit(request):
         else :
             num = 0
             data = dict(request.POST)
-            for obj in Menu.objects.all():
+            print(float(data.get('price')[num]))
+            for obj in Menu.objects.filter(restaurant_id = User.objects.filter(email=request.user)[0].id):
                 obj.name = data.get('name')[num]
-                obj.price = data.get('price')[num]
+                obj.price = float(data.get('price')[num])
                 obj.categories = data.get('categories')[num]
                 obj.details = data.get('details')[num]
                 obj.save()
