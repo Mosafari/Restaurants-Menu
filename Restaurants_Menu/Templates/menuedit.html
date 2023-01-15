@@ -1,0 +1,39 @@
+{% extends "main.html" %}
+
+{% block content %}
+<div class="box">
+    <div class="field">
+
+          <strong>{{ name }}'s Menu</strong>
+        
+    </div>
+  </div>
+  <div class="box">
+    <div class="field">
+      <div class="columns">
+        <div class="column">ID</div>
+        <div class="column">Name</div>
+        <div class="column">Price</div>
+        <div class="column">Categories</div>
+        <div class="column is-two-fifths">Details</div>
+        <div class="column is-1">DELETE</div>
+      </div>
+<form method="POST" action="{% url "updel" %}">
+    {% csrf_token %}
+    {% for result in results %}
+        <div class="columns">
+            <div class="column">{{ forloop.counter }}</div>
+            <div class="column"><input class="input is-large" type="text" name="name" value="{{result.name}}" autofocus="" ></div>
+            <div class="column"><input class="input is-large" type="number" name="price" value="{{result.price}}" autofocus="" ></div>
+            <div class="column"><input class="input is-large" type="text" name="categories" value="{{result.categories}}" autofocus="" ></div>
+            <div class="column is-two-fifths"><input class="input is-large" type="text" name="details" value="{{result.details}}" autofocus="" ></div>
+            <div class="column is-1"><input type="checkbox" id="ch{{result.id}}" name="checkbox" value="{{result.id}}"></div>
+        </div>
+    {% endfor %}    
+
+    <button class="button is-block is-info is-large is-fullwidth">UPDATE</button> 
+    
+</form>
+    </div>
+</div>
+{% endblock %}

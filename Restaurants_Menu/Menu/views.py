@@ -92,10 +92,11 @@ def profile(request):
 # add records to home page
 @login_required(login_url="/restaurant/login/",) 
 def home(request):
-    user = User.objects.filter(email=request.user)
-    name = user[0].restaurant
-    results = Menu.objects.all()
-    return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
+    if request.method == 'GET':
+        user = User.objects.filter(email=request.user)
+        name = user[0].restaurant
+        results = Menu.objects.all()
+        return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
 
 @login_required(login_url="/restaurant/login/",) 
 def AddToMenu(request):
@@ -110,6 +111,33 @@ def AddToMenu(request):
             return HttpResponseRedirect(reverse('home'))
         else:
             return HttpResponseRedirect(reverse('add'))
-            
+        
+@login_required(login_url="/restaurant/login/",)  
+def edit(request):
+    if request.method == "GET":
+        user = User.objects.filter(email=request.user)
+        name = user[0].restaurant
+        results = Menu.objects.all()
+        return render(request, 'menuedit.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
+    
+    if request.method == "POST":
+        if request.POST.get('checkbox'):
+            for i in request.POST['checkbox']:
+                Menu.objects.get(id = int(i)).delete()
+            for rec in Menu.objects.all():
+                rec.save()
+            return HttpResponseRedirect(reverse('home'))
+        else :
+            num = 0
+            data = dict(request.POST)
+            for obj in Menu.objects.all():
+                obj.name = data.get('name')[num]
+                obj.price = data.get('price')[num]
+                obj.categories = data.get('categories')[num]
+                obj.details = data.get('details')[num]
+                obj.save()
+                num += 1
+            return HttpResponseRedirect(reverse('home'))
+
         
         

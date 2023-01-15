@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="column is-4 is-offset-4">
-    <h3 class="title">Edit</h3>
+    <h3 class="title">Add to Menu</h3>
 
     <div class="box">
 
@@ -18,6 +18,9 @@
             </div>
 
             <button class="button is-block is-info is-large is-fullwidth">Add</button> 
+        </form>
+        <form method="GET" action="{% url "updel" %}">
+            <button class="button is-block is-info is-large is-fullwidth">Edit</button> 
         </form>
     </div>
 </div>
