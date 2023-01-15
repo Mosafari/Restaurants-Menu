@@ -26,4 +26,4 @@ class MenuSerializer(serializers.ModelSerializer):
                                        restaurant = User.objects.filter(email=self.context.get("user"))[0],
                                          )
         menu.save()
-        return menu.name
+        return menu
