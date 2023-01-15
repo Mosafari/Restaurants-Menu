@@ -17,6 +17,13 @@ from django.contrib.auth import authenticate
 
 # Create your views here.
 from .forms import CustomUserCreationForm, MenuForm
+
+# API JWT
+from .serializers import MenuSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
         form = CustomUserCreationForm() 
@@ -141,5 +148,14 @@ def edit(request):
                 num += 1
             return HttpResponseRedirect(reverse('home'))
 
-        
+
+# view for adding to menu
+class AddAPI(APIView):
+    permission_classes = (IsAuthenticated,)
+    def post(self, request):
+        serializer = MenuSerializer(data=request.data,
+    context={'user': request.user})
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
         

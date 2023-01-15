@@ -1,5 +1,11 @@
 from django.urls import path
-from .views import SignUpView,LogInView, main, Logout, profile, home, AddToMenu, edit
+from .views import SignUpView,LogInView, main, Logout, profile, home, AddToMenu, edit, AddAPI
+
+# JWT token
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 # adding paths
 urlpatterns = [
@@ -11,5 +17,7 @@ urlpatterns = [
     path('home/', home, name="home"),
     path('AddToMenu/', AddToMenu, name="add"),
     path('edit/', edit, name="updel"),
-    
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/add/', AddAPI.as_view(), name="AddAPI"),
 ]
