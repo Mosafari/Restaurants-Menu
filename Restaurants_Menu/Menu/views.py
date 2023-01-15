@@ -93,9 +93,10 @@ def profile(request):
 @login_required(login_url="/restaurant/login/",) 
 def home(request):
     if request.method == 'GET':
+        print(request.user)
         user = User.objects.filter(email=request.user)
         name = user[0].restaurant
-        results = Menu.objects.all()
+        results = Menu.objects.filter(restaurant_id = user[0].id)
         return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
 
 @login_required(login_url="/restaurant/login/",) 
@@ -117,7 +118,7 @@ def edit(request):
     if request.method == "GET":
         user = User.objects.filter(email=request.user)
         name = user[0].restaurant
-        results = Menu.objects.all()
+        results = Menu.objects.filter(restaurant_id = user[0].id)
         return render(request, 'menuedit.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
     
     if request.method == "POST":
