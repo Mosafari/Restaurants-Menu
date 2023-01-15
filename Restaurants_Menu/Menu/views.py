@@ -159,6 +159,18 @@ class AddAPI(APIView):
         serializer.save()
         return Response(serializer.data)
     
-    
-
+# show menu list of current user
+from django.http import JsonResponse
+class APIMenu(APIView):
+    permission_classes = (IsAuthenticated,)
+    def get(self, request):
+        result = {}
+        for num,rec in enumerate(Menu.objects.filter(restaurant_id = User.objects.filter(email=request.user)[0].id)):
+            result[num+1] ={'name': rec.name,
+                            'price': rec.price,
+                            'details': rec.details,
+                            'categories': rec.categories
+                            }
+        return JsonResponse(result)
+            
         
