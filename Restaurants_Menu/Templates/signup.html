@@ -14,7 +14,7 @@
 
     <div class="box">
 
-        <form method="POST" action="/restaurant/signup/">
+        <form method="POST" action="/restaurant/signup/" id = 'signup-form'>
             {% csrf_token %}
             <div class="field">
                 <div class="control">
@@ -23,30 +23,6 @@
                     {% endfor %}
                 </div>
             </div>
-            {% comment %} <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="" >
-                </div>
-            </div>
-
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="name" placeholder="Name" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password1" placeholder="Password">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password2" placeholder="Confirm Password">
-                </div>
-            </div> {% endcomment %}
 
             <button class="button is-block is-info is-large is-fullwidth">Sign Up</button> 
         </form>
@@ -61,11 +37,33 @@
 
         <br>
         {% if not current_user.is_authenticated %}
-            <a href="{% url 'login' %}" > already have an account? 
+            <a href="{% url 'login' %}" id = 'redirectlogin' > already have an account? 
                 Login
             </a>
         {% endif %}
 
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script type=text/javascript>
+$(document).ready(function(){
+    $("#redirectlogin").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'login' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
+            type: "GET",
+            success: function (data) {
+                $("#bodiv").load("{% url 'login' %}")
+                window.history.pushState("redirect", "redirect-login", "{% url 'login' %}");
+                alert ("Successfull");}
+            ,
+            error: function() {
+                alert ("Something went wrong");
+            }
+    })
+  });
+});
+</script>
 {% endblock %}

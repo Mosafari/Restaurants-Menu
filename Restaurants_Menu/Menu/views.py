@@ -26,9 +26,12 @@ from rest_framework.permissions import IsAuthenticated
 
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
-        form = CustomUserCreationForm() 
-        return render(request, 'signup.html',{'message':'Password must contain at least 8 characters.(Number\'s and Letter\'s\')', "form":form},status=200)
-    
+        is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+        if request.method == 'GET':
+            form = CustomUserCreationForm() 
+            print(request.headers)
+            return render(request, 'signup.html',{'message':'Password must contain at least 8 characters.(Number\'s and Letter\'s\')', "form":form},status=200)
+        # if request.method == 'GET' and 
     # importing new form
     def post(self, request, *args, **kwargs):
         messages =[]
