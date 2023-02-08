@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
+<div class="column is-4 is-offset-4" id="logajax">
     <h3 class="title">Login</h3>
 
     {% block messages %}
@@ -45,11 +45,39 @@
 
         <br>
         {% if not current_user.is_authenticated %}
-            <a href="{% url 'signup' %}" > You don't have an account? 
+            <a href="{% url 'signup' %}" id="redirectsignup" > You don't have an account? 
                 Signup
             </a>
         {% endif %}
 
     </div>
 </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type=text/javascript id="script">
+$(document).ready(function(){
+    $("#redirectsignup").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'signup' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
+            type: "GET",
+            success: function (data) {
+                $("#bodiv").load("{% url 'signup' %} #sigajax")
+                window.history.pushState("redirect", "redirect-signup", "{% url 'signup' %}");
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.innerHTML = $(data).find("#script").text();
+                console.log($("#SCRtepm"))
+                $("#SCRtepm").html(script);
+                alert ("Success");}
+            ,
+            error: function() {
+                alert ("Something went wrong");
+            }
+    })
+  });
+});
+</script>
 {% endblock %}

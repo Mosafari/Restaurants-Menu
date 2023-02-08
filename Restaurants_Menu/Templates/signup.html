@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
+<div class="column is-4 is-offset-4" id="sigajax">
     <h3 class="title">Sign Up</h3>
     
     {% block messages %}
@@ -47,7 +47,7 @@
 {% endblock %}
 
 {% block javascript %}
-<script type=text/javascript>
+<script type=text/javascript id="script">
 $(document).ready(function(){
     $("#redirectlogin").click(function(e){
         e.preventDefault();
@@ -55,9 +55,14 @@ $(document).ready(function(){
             url: "{% url 'login' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
             type: "GET",
             success: function (data) {
-                $("#bodiv").load("{% url 'login' %}")
+                $("#bodiv").load("{% url 'login' %} #logajax")
                 window.history.pushState("redirect", "redirect-login", "{% url 'login' %}");
-                alert ("Successfull");}
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.innerHTML = $(data).find("#script").text();
+                $("#SCRtepm").html(script);
+                console.log($(data).find("#script").text());
+                alert ("Success");}
             ,
             error: function() {
                 alert ("Something went wrong");
