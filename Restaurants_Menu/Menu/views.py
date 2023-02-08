@@ -1,5 +1,8 @@
 from django.shortcuts import render, HttpResponse,HttpResponseRedirect
 
+# importim JSON response
+from django.http import JsonResponse
+
 from django.urls import reverse_lazy, reverse 
 from django.views import View
 
@@ -34,13 +37,14 @@ class SignUpView(View):
         # if request.method == 'GET' and 
     # importing new form
     def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         messages =[]
         email = request.POST.get('email')
         restaurant = request.POST.get('restaurant')
         password = request.POST.get('password1')
         print(password,email,restaurant)
         form = CustomUserCreationForm(request.POST)
-        print(form.is_valid(),form.cleaned_data)
+        print(form.is_valid(),form.cleaned_data,is_ajax)
         if form.errors.as_text():
             errors = form.errors.as_text().splitlines()[1:]
             print(errors)
@@ -54,7 +58,10 @@ class SignUpView(View):
         # if error or message is not None return to signup
         if messages or errors :
             f = CustomUserCreationForm()
-            return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
+            if is_ajax:
+                return JsonResponse({'messages': messages, 'errors': errors})
+            else:
+                return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
         if form.is_valid():
             user = form.save(commit=False)
             user.save()

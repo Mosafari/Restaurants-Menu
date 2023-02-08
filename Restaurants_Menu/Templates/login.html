@@ -32,7 +32,7 @@
                     Remember me
                 </label>
             </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+            <button class="button is-block is-info is-large is-fullwidth" id="logbut">Login</button>
         </form>
 
         {% block errors %}
@@ -76,8 +76,18 @@ $(document).ready(function(){
             error: function() {
                 alert ("Something went wrong");
             }
+        })
+    });
+    $("#logbut").click(function(e){
+        $.ajax({
+            url: "{% url 'login' %}",
+            type: "POST",
+            data: $("form").serialize(),
+            success: function (data) {
+                console.log(data)
+            },
+        })
     })
-  });
 });
 </script>
 {% endblock %}

@@ -3,11 +3,11 @@
 {% block content %}
 <div class="column is-4 is-offset-4" id="sigajax">
     <h3 class="title">Sign Up</h3>
-    
+
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
-                <div >{{ message }}</div>
+                <div id="msg">{{ message }}</div>
             {% endfor %}
         {% endif %}
     {% endblock %}
@@ -24,13 +24,13 @@
                 </div>
             </div>
 
-            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button> 
+            <button class="button is-block is-info is-large is-fullwidth" id="sigbut">Sign Up</button> 
         </form>
 
         {% block errors %}
             {% if errors %}
                 {% for error in errors %}
-                    <div >{{ error }}</div>
+                    <div id="err">{{ error }}</div>
                 {% endfor %}
             {% endif %}
         {% endblock %}
@@ -48,27 +48,56 @@
 
 {% block javascript %}
 <script type=text/javascript id="script">
-$(document).ready(function(){
-    $("#redirectlogin").click(function(e){
+    $(document).ready(function(){
+        $("#redirectlogin").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: "{% url 'login' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
+                type: "GET",
+                success: function (data) {
+                    $("#bodiv").load("{% url 'login' %} #logajax")
+                    window.history.pushState("redirect", "redirect-login", "{% url 'login' %}");
+                    var script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.innerHTML = $(data).find("#script").text();
+                    $("#SCRtepm").html(script);
+                    console.log($(data).find("#script").text());
+                    alert ("Success");}
+                ,
+                error: function() {
+                    alert ("Something went wrong");
+                }
+        })
+    });
+    $("#sigbut").click(function(e){
         e.preventDefault();
+        var fdata = $("form").serialize();
+        console.log(fdata)
         $.ajax({
-            url: "{% url 'login' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
-            type: "GET",
+            url: "{% url 'signup' %}",
+            type: "POST",
+            data: fdata,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            },
             success: function (data) {
-                $("#bodiv").load("{% url 'login' %} #logajax")
-                window.history.pushState("redirect", "redirect-login", "{% url 'login' %}");
-                var script = document.createElement("script");
-                script.type = "text/javascript";
-                script.innerHTML = $(data).find("#script").text();
-                $("#SCRtepm").html(script);
-                console.log($(data).find("#script").text());
-                alert ("Success");}
-            ,
-            error: function() {
-                alert ("Something went wrong");
-            }
+                const messages = data.messages;
+                const errors = data.errors;
+                let msg = "";
+                let err = "";
+                for (let x in messages ) {
+                    msg += "<div>" + messages[x] + "</div>";
+                  }
+                for (let x in errors ) {
+                    msg += "<div>" + errors[x] + "</div>";
+                  }
+                $("#msg").html(msg);
+                $("#err").html(err);
+
+                console.log(msg + err)
+            },
+        })
     })
-  });
-});
+    });
 </script>
 {% endblock %}
