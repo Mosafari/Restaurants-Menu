@@ -64,4 +64,9 @@ class Menu(models.Model):
     categories = models.CharField(max_length=255)
     details = models.CharField(max_length=255)
     restaurant = models.ForeignKey(User, on_delete=models.CASCADE)
+    # add img to menu DB
+    image = models.ImageField(upload_to='images') 
+    
+    def __str__(self):
+        return self.name
     
