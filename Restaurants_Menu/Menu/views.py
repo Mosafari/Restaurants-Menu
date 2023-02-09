@@ -104,6 +104,7 @@ def home(request):
         user = User.objects.filter(email=request.user)
         name = user[0].restaurant
         results = Menu.objects.filter(restaurant_id = user[0].id)
+        print(results[0].image.url,type(results[0].image.url))
         return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
 
 @login_required(login_url="/restaurant/login/",) 
