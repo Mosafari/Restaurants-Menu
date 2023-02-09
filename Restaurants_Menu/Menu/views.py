@@ -148,7 +148,7 @@ def edit(request):
         else :
             num = 0
             data = dict(request.POST)
-            if not data:
+            if len(data) == 1:
                 return HttpResponseRedirect(reverse('home'))
             print(float(data.get('price')[num]))
             for obj in Menu.objects.filter(restaurant_id = User.objects.filter(email=request.user)[0].id):
