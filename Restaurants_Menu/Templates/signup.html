@@ -85,11 +85,10 @@
             success: function (data) {
                 const messages = data.messages;
                 const errors = data.errors;
+
                 // 1. clear the form.
-                $("#friend-form").trigger('reset');
-                // 2. focus to nickname input 
-                $("#id_nick_name").focus();
-                
+                $("#signup-form").trigger('reset');
+
                 let msg = "";
                 let err = "";
                 for (let x in messages ) {
@@ -102,6 +101,8 @@
                 $("#err").html(err);
 
                 console.log(msg + err)
+                if(msg === "" && err === "") location.href = "{% url 'main' %}"
+
             },
         })
     })
