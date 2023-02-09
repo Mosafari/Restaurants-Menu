@@ -4,10 +4,11 @@
 <div class="column is-4 is-offset-4" id="sigajax">
     <h3 class="title">Sign Up</h3>
 
+    <span id="msg"></span>
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
-                <div id="msg">{{ message }}</div>
+                <div >{{ message }}</div>
             {% endfor %}
         {% endif %}
     {% endblock %}
@@ -27,10 +28,11 @@
             <button class="button is-block is-info is-large is-fullwidth" id="sigbut">Sign Up</button> 
         </form>
 
+        <span id="err"></span>
         {% block errors %}
             {% if errors %}
                 {% for error in errors %}
-                    <div id="err">{{ error }}</div>
+                    <div>{{ error }}</div>
                 {% endfor %}
             {% endif %}
         {% endblock %}
@@ -83,13 +85,18 @@
             success: function (data) {
                 const messages = data.messages;
                 const errors = data.errors;
+                // 1. clear the form.
+                $("#friend-form").trigger('reset');
+                // 2. focus to nickname input 
+                $("#id_nick_name").focus();
+                
                 let msg = "";
                 let err = "";
                 for (let x in messages ) {
                     msg += "<div>" + messages[x] + "</div>";
                   }
                 for (let x in errors ) {
-                    msg += "<div>" + errors[x] + "</div>";
+                    err += "<div>" + errors[x] + "</div>";
                   }
                 $("#msg").html(msg);
                 $("#err").html(err);
