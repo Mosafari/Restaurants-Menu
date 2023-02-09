@@ -113,7 +113,7 @@ def AddToMenu(request):
         return render(request, 'edit.html', {'current_user': request.user, "form": MenuForm(None, None)})
     if request.method == "POST":
         form = MenuForm(request.POST, request.FILES)
-        print(form.data,form.files)
+        print(form.files)
         if form.is_valid():
             data = form.data
             menuobj = Menu.objects.create(name = data["name"], price = float(data["price"]), categories = data["categories"], details = data["details"], restaurant = request.user, image=form.files["image"])
@@ -140,12 +140,20 @@ def edit(request):
         else :
             num = 0
             data = dict(request.POST)
+            form = dict(MenuForm(request.POST, request.FILES).files)
+            print(form.get("image"),data,request.POST)
             print(float(data.get('price')[num]))
             for obj in Menu.objects.filter(restaurant_id = User.objects.filter(email=request.user)[0].id):
                 obj.name = data.get('name')[num]
                 obj.price = float(data.get('price')[num])
                 obj.categories = data.get('categories')[num]
                 obj.details = data.get('details')[num]
+                try:
+                    if data.get(str(num)):
+                        print(data.get(str(num)),form.get("image"))
+                        obj.image = form.get("image").pop(0)
+                except IndexError:
+                    continue
                 obj.save()
                 num += 1
             return HttpResponseRedirect(reverse('home'))

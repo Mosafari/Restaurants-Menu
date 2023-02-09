@@ -16,9 +16,10 @@
         <div class="column">Price</div>
         <div class="column">Categories</div>
         <div class="column is-two-fifths">Details</div>
+        <div class="column">Image</div>
         <div class="column is-1">DELETE</div>
       </div>
-<form method="POST" action="{% url "updel" %}">
+<form method="POST" action="{% url "updel" %}" enctype="multipart/form-data">
     {% csrf_token %}
     {% for result in results %}
         <div class="columns">
@@ -27,10 +28,23 @@
             <div class="column"><input class="input is-large" type="number" name="price" value="{{result.price}}" autofocus="" ></div>
             <div class="column"><input class="input is-large" type="text" name="categories" value="{{result.categories}}" autofocus="" ></div>
             <div class="column is-two-fifths"><input class="input is-large" type="text" name="details" value="{{result.details}}" autofocus="" ></div>
+            <div class="column"><span class="hide"><input type="file" name="image" class="button is-block is-info is-large is-fullwidth" accept="image/*"  id="id_image"></span></div>
+            <input  class="hval" type="hidden" name="{{ forloop.counter }}" value="" />
             <div class="column is-1"><input type="checkbox" id="ch{{result.id}}" name="checkbox" value="{{result.id}}"></div>
         </div>
-    {% endfor %}    
-
+        {% endfor %}    
+        
+        <script>
+          var hval = document.getElementsByClassName("hval");
+          var img = document.getElementsByClassName("hide");
+          console.log(hval)
+          for(let x in img) {
+            console.log(x)
+            img[x].onclick = function(){
+              hval[x].value = "True";
+          }
+        }
+        </script>
     <button class="button is-block is-info is-large is-fullwidth">UPDATE</button> 
     
 </form>

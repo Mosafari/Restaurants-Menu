@@ -110,7 +110,7 @@
     
     // Get the image and insert it inside the modal - use its "alt" text as a caption
     var img = document.getElementsByClassName("imglink");
-    console.log(img);
+    {% comment %} console.log(img); {% endcomment %}
     var modalImg = document.getElementById("img01");
     for(let x in img) {
       img[x].onclick = function(){
