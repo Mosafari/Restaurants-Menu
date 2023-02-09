@@ -111,10 +111,11 @@ def AddToMenu(request):
     if request.method == "GET":
         return render(request, 'edit.html', {'current_user': request.user, "form": MenuForm(None, None)})
     if request.method == "POST":
-        form = MenuForm(request.POST)
+        form = MenuForm(request.POST, request.FILES)
+        print(form.data,form.files)
         if form.is_valid():
             data = form.data
-            menuobj = Menu.objects.create(name = data["name"], price = float(data["price"]), categories = data["categories"], details = data["details"], restaurant = request.user)
+            menuobj = Menu.objects.create(name = data["name"], price = float(data["price"]), categories = data["categories"], details = data["details"], restaurant = request.user, image=form.files["image"])
             menuobj.save()
             return HttpResponseRedirect(reverse('home'))
         else:

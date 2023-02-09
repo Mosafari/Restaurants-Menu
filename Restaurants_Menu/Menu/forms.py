@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import User, Menu
 from django import forms
 
-from django.forms import TextInput, EmailInput , CharField, PasswordInput, NumberInput
+from django.forms import TextInput, EmailInput , CharField, PasswordInput, NumberInput, FileInput
 from django.utils.translation import gettext_lazy as _
 class CustomUserCreationForm(UserCreationForm):
     password1 = CharField(
@@ -91,7 +91,7 @@ class CustomUserChangeForm(UserChangeForm):
 class MenuForm(forms.ModelForm):
     class Meta:
         model = Menu
-        fields = ("name", "price", "categories", "details", )
+        fields = ("name", "price", "categories", "details", "image", )
         widgets = {
         'name': TextInput(attrs={
                 'class': "input is-large",
@@ -112,5 +112,8 @@ class MenuForm(forms.ModelForm):
                 'class': "input is-large",
                 'autofocus': '',
                 'placeholder': 'Details'
+                }),
+        'image': FileInput(attrs={
+                'class': "button is-block is-info is-large is-fullwidth",
                 }),
         }
