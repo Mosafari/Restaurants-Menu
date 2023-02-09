@@ -4,6 +4,7 @@
 <div class="column is-4 is-offset-4" id="logajax">
     <h3 class="title">Login</h3>
 
+    <span id="msg"></span>
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -13,7 +14,7 @@
     {% endblock %}
     
     <div class="box">
-        <form method="POST" action="/restaurant/login/">
+        <form method="POST" action="/restaurant/login/" id="login-form">
             {% csrf_token %}
             <div class="field">
                 <div class="control">
@@ -79,12 +80,34 @@ $(document).ready(function(){
         })
     });
     $("#logbut").click(function(e){
+        e.preventDefault();
+        var fdata = $("form").serialize();
+        console.log(fdata)
         $.ajax({
             url: "{% url 'login' %}",
             type: "POST",
-            data: $("form").serialize(),
+            data: fdata,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            },
             success: function (data) {
-                console.log(data)
+                const messages = data.messages;
+                const errors = data.errors;
+
+                // 1. clear the form.
+                $("#login-form").trigger('reset');
+
+                let msg = "";
+
+                for (let x in messages ) {
+                    msg += "<div>" + messages[x] + "</div>";
+                  }
+
+                $("#msg").html(msg);
+
+                console.log(msg)
+                if( msg === "") location.href = "{% url 'main' %}"
+
             },
         })
     })

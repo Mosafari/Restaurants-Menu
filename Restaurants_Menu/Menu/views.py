@@ -76,10 +76,13 @@ class LogInView(View):
         return render(request, 'login.html',status=200)
 
     def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(username=email, password=password)
         if user is None:
+            if is_ajax:
+                return JsonResponse({'messages':['Invalid Username or Password']})
             return render(request, 'login.html',{'messages':['Invalid Username or Password']})
         else:
             login(request,user)
