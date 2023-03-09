@@ -1,5 +1,8 @@
 from django.shortcuts import render, HttpResponse,HttpResponseRedirect
 
+# importim JSON response
+from django.http import JsonResponse
+
 from django.urls import reverse_lazy, reverse 
 from django.views import View
 
@@ -26,18 +29,22 @@ from rest_framework.permissions import IsAuthenticated
 
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
-        form = CustomUserCreationForm() 
-        return render(request, 'signup.html',{'message':'Password must contain at least 8 characters.(Number\'s and Letter\'s\')', "form":form},status=200)
-    
+        is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+        if request.method == 'GET':
+            form = CustomUserCreationForm() 
+            print(request.headers)
+            return render(request, 'signup.html',{'message':'Password must contain at least 8 characters.(Number\'s and Letter\'s\')', "form":form},status=200)
+        # if request.method == 'GET' and 
     # importing new form
     def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         messages =[]
         email = request.POST.get('email')
         restaurant = request.POST.get('restaurant')
         password = request.POST.get('password1')
         print(password,email,restaurant)
         form = CustomUserCreationForm(request.POST)
-        print(form.is_valid(),form.cleaned_data)
+        print(form.is_valid(),form.cleaned_data,is_ajax)
         if form.errors.as_text():
             errors = form.errors.as_text().splitlines()[1:]
             print(errors)
@@ -51,7 +58,10 @@ class SignUpView(View):
         # if error or message is not None return to signup
         if messages or errors :
             f = CustomUserCreationForm()
-            return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
+            if is_ajax:
+                return JsonResponse({'messages': messages, 'errors': errors})
+            else:
+                return render(request, 'signup.html',{'messages': messages, 'errors': errors, "form": f})
         if form.is_valid():
             user = form.save(commit=False)
             user.save()
@@ -66,10 +76,13 @@ class LogInView(View):
         return render(request, 'login.html',status=200)
 
     def post(self, request, *args, **kwargs):
+        is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
         email = request.POST.get('email')
         password = request.POST.get('password')
         user = authenticate(username=email, password=password)
         if user is None:
+            if is_ajax:
+                return JsonResponse({'messages':['Invalid Username or Password']})
             return render(request, 'login.html',{'messages':['Invalid Username or Password']})
         else:
             login(request,user)
@@ -142,6 +155,8 @@ def edit(request):
             data = dict(request.POST)
             form = dict(MenuForm(request.POST, request.FILES).files)
             print(form.get("image"),data,request.POST)
+            if len(data) == 1:
+                return HttpResponseRedirect(reverse('home'))
             print(float(data.get('price')[num]))
             for obj in Menu.objects.filter(restaurant_id = User.objects.filter(email=request.user)[0].id):
                 obj.name = data.get('name')[num]

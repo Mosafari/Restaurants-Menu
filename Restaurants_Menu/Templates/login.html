@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
+<div class="column is-4 is-offset-4" id="logajax">
     <h3 class="title">Login</h3>
 
+    <span id="msg"></span>
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -13,7 +14,7 @@
     {% endblock %}
     
     <div class="box">
-        <form method="POST" action="/restaurant/login/">
+        <form method="POST" action="/restaurant/login/" id="login-form">
             {% csrf_token %}
             <div class="field">
                 <div class="control">
@@ -32,7 +33,7 @@
                     Remember me
                 </label>
             </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
+            <button class="button is-block is-info is-large is-fullwidth" id="logbut">Login</button>
         </form>
 
         {% block errors %}
@@ -45,11 +46,71 @@
 
         <br>
         {% if not current_user.is_authenticated %}
-            <a href="{% url 'signup' %}" > You don't have an account? 
+            <a href="{% url 'signup' %}" id="redirectsignup" > You don't have an account? 
                 Signup
             </a>
         {% endif %}
 
     </div>
 </div>
+
+{% endblock %}
+
+{% block javascript %}
+<script type=text/javascript id="script">
+$(document).ready(function(){
+    $("#redirectsignup").click(function(e){
+        e.preventDefault();
+        $.ajax({
+            url: "{% url 'signup' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
+            type: "GET",
+            success: function (data) {
+                $("#bodiv").load("{% url 'signup' %} #sigajax")
+                window.history.pushState("redirect", "redirect-signup", "{% url 'signup' %}");
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.innerHTML = $(data).find("#script").text();
+                console.log($("#SCRtepm"))
+                $("#SCRtepm").html(script);
+                alert ("Success");}
+            ,
+            error: function() {
+                alert ("Something went wrong");
+            }
+        })
+    });
+    $("#logbut").click(function(e){
+        e.preventDefault();
+        var fdata = $("form").serialize();
+        console.log(fdata)
+        $.ajax({
+            url: "{% url 'login' %}",
+            type: "POST",
+            data: fdata,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            },
+            success: function (data) {
+                const messages = data.messages;
+                const errors = data.errors;
+
+                // 1. clear the form.
+                $("#login-form").trigger('reset');
+
+                let msg = "";
+
+                for (let x in messages ) {
+                    msg += "<div>" + messages[x] + "</div>";
+                  }
+
+                $("#msg").html(msg);
+
+                console.log(msg)
+                if( msg === "") location.href = "{% url 'main' %}"
+
+            },
+        })
+    })
+});
+</script>
 {% endblock %}

@@ -1,0 +1,26 @@
+Metadata-Version: 2.0
+Name: Dajax
+Version: 1.3
+Summary: Django URL resolver for Ajax
+Home-page: https://github.com/alexpirine/dajax
+Author: Alexandre Syenchuk
+Author-email: as@netica.fr
+License: Public Domain
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Environment :: Web Environment
+Classifier: Framework :: Django
+Classifier: Framework :: Django :: 1.9
+Classifier: Framework :: Django :: 1.10
+Classifier: Intended Audience :: Developers
+Classifier: License :: Public Domain
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Dist: Django (>=1.9)
+
+UNKNOWN
+
+

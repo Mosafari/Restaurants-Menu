@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="column is-4 is-offset-4">
+<div class="column is-4 is-offset-4" id="sigajax">
     <h3 class="title">Sign Up</h3>
-    
+
+    <span id="msg"></span>
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -14,7 +15,7 @@
 
     <div class="box">
 
-        <form method="POST" action="/restaurant/signup/">
+        <form method="POST" action="/restaurant/signup/" id = 'signup-form'>
             {% csrf_token %}
             <div class="field">
                 <div class="control">
@@ -23,49 +24,88 @@
                     {% endfor %}
                 </div>
             </div>
-            {% comment %} <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Email" autofocus="" >
-                </div>
-            </div>
 
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="text" name="name" placeholder="Name" autofocus="">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password1" placeholder="Password">
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password2" placeholder="Confirm Password">
-                </div>
-            </div> {% endcomment %}
-
-            <button class="button is-block is-info is-large is-fullwidth">Sign Up</button> 
+            <button class="button is-block is-info is-large is-fullwidth" id="sigbut">Sign Up</button> 
         </form>
 
+        <span id="err"></span>
         {% block errors %}
             {% if errors %}
                 {% for error in errors %}
-                    <div >{{ error }}</div>
+                    <div>{{ error }}</div>
                 {% endfor %}
             {% endif %}
         {% endblock %}
 
         <br>
         {% if not current_user.is_authenticated %}
-            <a href="{% url 'login' %}" > already have an account? 
+            <a href="{% url 'login' %}" id = 'redirectlogin' > already have an account? 
                 Login
             </a>
         {% endif %}
 
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script type=text/javascript id="script">
+    $(document).ready(function(){
+        $("#redirectlogin").click(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: "{% url 'login' %}",  //This is the jinja template tag that will automatically fill in the url pattern from your urls.py corresponding to the name of that url pattern
+                type: "GET",
+                success: function (data) {
+                    $("#bodiv").load("{% url 'login' %} #logajax")
+                    window.history.pushState("redirect", "redirect-login", "{% url 'login' %}");
+                    var script = document.createElement("script");
+                    script.type = "text/javascript";
+                    script.innerHTML = $(data).find("#script").text();
+                    $("#SCRtepm").html(script);
+                    console.log($(data).find("#script").text());
+                    alert ("Success");}
+                ,
+                error: function() {
+                    alert ("Something went wrong");
+                }
+        })
+    });
+    $("#sigbut").click(function(e){
+        e.preventDefault();
+        var fdata = $("form").serialize();
+        console.log(fdata)
+        $.ajax({
+            url: "{% url 'signup' %}",
+            type: "POST",
+            data: fdata,
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+            },
+            success: function (data) {
+                const messages = data.messages;
+                const errors = data.errors;
+
+                // 1. clear the form.
+                $("#signup-form").trigger('reset');
+
+                let msg = "";
+                let err = "";
+                for (let x in messages ) {
+                    msg += "<div>" + messages[x] + "</div>";
+                  }
+                for (let x in errors ) {
+                    err += "<div>" + errors[x] + "</div>";
+                  }
+                $("#msg").html(msg);
+                $("#err").html(err);
+
+                console.log(msg + err)
+                if(msg === "" && err === "") location.href = "{% url 'main' %}"
+
+            },
+        })
+    })
+    });
+</script>
 {% endblock %}

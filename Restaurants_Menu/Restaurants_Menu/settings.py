@@ -143,6 +143,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# del for changeing method
+
 # Base url to serve media files  
 MEDIA_URL = '/media/'  
 
