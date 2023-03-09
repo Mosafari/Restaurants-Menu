@@ -29,7 +29,7 @@
             <div class="column"><input class="input is-large" type="text" name="categories" value="{{result.categories}}" autofocus="" ></div>
             <div class="column is-two-fifths"><input class="input is-large" type="text" name="details" value="{{result.details}}" autofocus="" ></div>
             <div class="column"><span class="hide"><input type="file" name="image" class="button is-block is-info is-large is-fullwidth" accept="image/*"  id="id_image"></span></div>
-            <input  class="hval" type="hidden" name="{{ forloop.counter }}" value="" />
+            <input  class="hval" type="hidden" name="{{ forloop.counter|add:'-1'}}" value="" />
             <div class="column is-1"><input type="checkbox" id="ch{{result.id}}" name="checkbox" value="{{result.id}}"></div>
         </div>
         {% endfor %}    

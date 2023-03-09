@@ -117,7 +117,7 @@ def home(request):
         user = User.objects.filter(email=request.user)
         name = user[0].restaurant
         results = Menu.objects.filter(restaurant_id = user[0].id)
-        print(results[0].image.url,type(results[0].image.url))
+        #print(results[0].image.url,type(results[0].image.url))
         return render(request, 'home.html', {'current_user': request.user, 'name': name, 'results' : results}, status=200)
 
 @login_required(login_url="/restaurant/login/",) 
@@ -164,8 +164,8 @@ def edit(request):
                 obj.categories = data.get('categories')[num]
                 obj.details = data.get('details')[num]
                 try:
-                    if data.get(str(num)):
-                        print(data.get(str(num)),form.get("image"))
+                    if data.get(str(num))[0]:
+                        print(data.get(str(num)),form.get("image"),num)
                         obj.image = form.get("image").pop(0)
                 except IndexError:
                     continue
