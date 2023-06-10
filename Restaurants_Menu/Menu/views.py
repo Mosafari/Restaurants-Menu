@@ -33,6 +33,9 @@ def handler404(request,exceptin):
     print("here" +request.GET)
     return render(request, '404.html',{'current_user': user},status=404)
     
+def loginredirect(request):
+    return HttpResponseRedirect(reverse('login'))
+
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
         is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'

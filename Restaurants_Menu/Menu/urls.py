@@ -1,5 +1,5 @@
-from django.urls import path
-from .views import SignUpView,LogInView, main, Logout, profile, home, AddToMenu, edit, AddAPI, APIMenu
+from django.urls import path, re_path
+from .views import SignUpView,LogInView, main, Logout, profile, home, AddToMenu, edit, AddAPI, APIMenu, loginredirect
 
 # JWT token
 from rest_framework_simplejwt.views import (
@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import (
 
 # adding paths
 urlpatterns = [
+    re_path('^(?=\s*$)', loginredirect, name="logredirect"),
     path('restaurant/signup/', SignUpView.as_view(), name="signup"),
     path('restaurant/login/', LogInView.as_view(), name="login"),
     path('restaurant/main/', main, name="main"),

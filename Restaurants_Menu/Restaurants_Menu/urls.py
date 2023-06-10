@@ -18,7 +18,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('/', include('Menu.urls')),
+    path('', include('Menu.urls')),
 ]
 
 from django.conf import settings  
