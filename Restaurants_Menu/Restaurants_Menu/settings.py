@@ -21,15 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 import os
-try:
-    SECRET_KEY = os.environ["SECRET_KEY"]
-except KeyError as e:
-    raise RuntimeError("Could not find a SECRET_KEY in environment") from e
+SECRET_KEY = 'django-insecure-o2)&g&b7tqkmmf^h1fik4d54-h+6&2v(5+b7ifz*w9$gg#=(w('
+# try:
+#     SECRET_KEY = os.environ["SECRET_KEY"]
+# except KeyError as e:
+#     raise RuntimeError("Could not find a SECRET_KEY in environment") from e
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['.restaurantsmenu.code']
+ALLOWED_HOSTS = ['*']#'.restaurantsmenu.code']
 
 AUTH_USER_MODEL = "Menu.User"
 

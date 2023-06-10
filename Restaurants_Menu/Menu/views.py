@@ -27,6 +27,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 
+
+# Error handling
+def handler404(request,exceptin):
+    print("here" +request.GET)
+    return render(request, '404.html',{'current_user': user},status=404)
+    
 class SignUpView(View):
     def get(self, request, *args, **kwargs):
         is_ajax = request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
@@ -95,7 +101,7 @@ class LogInView(View):
 def main(request):
     if request.method == "GET": 
         user = request.user
-        return render(request, 'main.html',{'current_user': user},status=200)
+        return render(request, 'welcome.html',{'current_user': user},status=200)
     
 @login_required(login_url="/restaurant/login/",) 
 def Logout(request):
