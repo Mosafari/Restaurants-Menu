@@ -1,0 +1,21 @@
+databases:
+  - name: RestaurantMenuport
+    databaseName: resmenu
+    user: djangoproject
+
+
+services:
+  - type: web
+    name: RestaurantsMenu
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn mysite.wsgi:application"
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: RestaurantMenuport
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
