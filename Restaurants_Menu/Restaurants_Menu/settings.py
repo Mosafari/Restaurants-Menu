@@ -1,3 +1,4 @@
+# edit for Render
 """
 Django settings for Restaurants_Menu project.
 
