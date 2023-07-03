@@ -42,6 +42,7 @@ AUTH_USER_MODEL = "Menu.User"
 # adding Menu app
 
 INSTALLED_APPS = [
+    'Menu.apps.RenderConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -94,7 +95,7 @@ WSGI_APPLICATION = 'Restaurants_Menu.wsgi.application'
 DATABASES = {
     'default': dj_database_url.config(
         # Feel free to alter this value to suit your needs.
-        default='postgres://djangoproject:5KcVv1Ecx1o4MeNeBOdyeIfQphuFBt4H@dpg-cihc6pdph6erq6hifvrg-a/resmenu',
+        default='postgresql://postgres:postgres@localhost:5432/mysite',
         conn_max_age=600
     )
 }
